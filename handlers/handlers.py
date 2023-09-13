@@ -41,13 +41,6 @@ async def process_cancel_command(message: Message):
     await message.answer(text=lexicon.get('cansel_if_default'))
 
 
-# Этот хэндлер будет срабатывать на команду /end до конца
-@dp.message(F.text.lower().in_(['/end']),
-            ~StateFilter(FSMFillForm.gift_family))
-async def process_end_command_not_end(message: Message):
-    await message.answer(text=lexicon.get('end_wrong'))
-
-
 # Этот хэндлер будет срабатывать на команду "/cancel" в любых состояниях,
 # кроме состояния по умолчанию, и отключать машину состояний
 @dp.message(Command(commands='cancel'), ~StateFilter(default_state))
@@ -59,8 +52,15 @@ async def process_cancel_command_state(message: Message, state: FSMContext):
 
 # Этот хэндлер будет срабатывать только в финальном состоянии
 @dp.message(StateFilter(FSMFillForm.finale))
-async def process_start_command_state(message: Message):
+async def process_finale(message: Message):
     await message.answer(text=lexicon.get('finale'))
+
+
+# Этот хэндлер будет срабатывать на команду /end до конца
+@dp.message(F.text.lower().in_(['/end']),
+            ~StateFilter(FSMFillForm.gift_family))
+async def process_end_command_not_end(message: Message):
+    await message.answer(text=lexicon.get('end_wrong'))
 
 
 # Этот хэндлер будет срабатывать, если введено корректное имя
